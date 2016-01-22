@@ -1,11 +1,11 @@
-var iw = 500;
-var ih = 500;
-var h = 16;
-var r = 6;
+var iw = 800;
+var ih = 800;
+var h = 20;
+var r = 8;
 
 var images = {
 	'wall':{'src':"wall.png", 'w':h, 'h':h},
-	'floor':{'src':"wall.png", 'w':h, 'h':h},
+	'floor':{'src':"floor.png", 'w':32, 'h':32},
 	'dungeon':{'src':"input_dungeon.png"}
 };
 
@@ -48,7 +48,7 @@ var all_images_promise = function(){
 function getIndex(x,y,hi,wi){
 	if(hi===undefined) hi = ih;
 	if(wi===undefined) wi = ih;
-	y = y % hi;
+	y = y % wi;
 	x = x % wi;
 	return (x+y*hi)*4;
 }
@@ -125,7 +125,8 @@ function getDistToFloor(x,y,read_data){
 
 
 var render_dungeon = function(){	
-	console.log(images);
+	document.getElementById("dungeon_canvas").width = iw;
+	document.getElementById("dungeon_canvas").height = ih;
 	var canvas = document.createElement("canvas"); 
 	canvas.width = iw;
 	canvas.height = ih;
@@ -166,9 +167,11 @@ var render_dungeon = function(){
 			}else if(images.dungeon.data[i]!=0){
 				var edge  = getDistToWall(x,y,images.dungeon.data);
 				if(edge==-1) edge = r;
-				data[i] = 100 - (r-edge)/r*80;
-				data[i+1] = 100 - (r-edge)/r*80;
-				data[i+2] = 100 - (r-edge)/r*80;
+				var mult = 1-(r-edge)/(r*1.5);
+				var fi = getIndex(x,y,images.floor.w,images.floor.h);
+				data[i] = images.floor.data[fi]*mult;
+				data[i+1] = images.floor.data[fi]*mult;
+				data[i+2] = images.floor.data[fi]*mult;
 			}else{
 				data[i] = 0;
 				data[i+1] =0;
