@@ -27,7 +27,7 @@ function getFloorShadow(x,y,read_data){
 	for(dx = 0; dx<=h; dx++){
 		var i = getIndex(x,y);
 		var i2 = getIndex(x-dx,y);
-		if(read_data[i2] == 0 && read_data[i] != 0){
+				if(read_data[i2] == 0 && read_data[i] != 0){
 			return 1;
 		}
 	}	
@@ -71,7 +71,7 @@ function getDistToFloor(x,y,read_data){
 		var dir = dirs[i];
 		for(var j = 0; j < r; j++){
 			var index = getIndex(x+dir[0]*j, y+dir[1]*j);
-			if(read_data[index] != 0) result = Math.min(result,j);
+			if(read_data[index+1] != 0) result = Math.min(result,j);
 		}
 	}
 	if(result === r * 3){
@@ -110,10 +110,11 @@ var draw_dungeon = function(){
 				for(var y = 0; y < ih; y++){
 					var i = getIndex(x,y);i
 					var wall = getWallHeight(x,y, read_data);
-					if(read_data[getIndex(x,y+h)]==0){
+							if(read_data[getIndex(x,y+h)+1]==0){
 						var edge = getDistToFloor(x,y+h,read_data);
 						var value = (edge/r)*256;
 						if(edge > r/2) value = 256 * (1 - edge/r);
+						if(edge >= r) value = 60;
 						data[i] = value;
 						data[i+1] =value;
 						data[i+2] =value;
@@ -122,12 +123,25 @@ var draw_dungeon = function(){
 						data[i] = wall_data[wi];
 						data[i+1] = wall_data[wi+1];
 						data[i+2] = wall_data[wi+2];
+						var wallLeft = getWallHeight(x-1,y, read_data);
+						var wallRight = getWallHeight(x+1,y, read_data);
+						var dWall = wall - wallLeft;
+						var predWallRight = wall + dWall;
+						var edge = 1;
+						var diff = wallRight - predWallRight;
+						if(diff>4 || diff < -4 || wallLeft == -1 || wallRight == -1){
+							edge = 0.5;
+						}
+						data[i] *= edge;
+						data[i+1] *=edge;
+						data[i+2] *=edge;
+						
 					}else if(read_data[i]!=0){
 						var edge  = getDistToWall(x,y,read_data);
 						if(edge==-1) edge = r;
-						data[i] = 100 - (r-edge)/r*60;
-						data[i+1] = 100 - (r-edge)/r*60;
-						data[i+2] = 100 - (r-edge)/r*60;
+						data[i] = 100 - (r-edge)/r*80;
+						data[i+1] = 100 - (r-edge)/r*80;
+						data[i+2] = 100 - (r-edge)/r*80;
 					}else{
 						data[i] = 0;
 						data[i+1] =0;
@@ -140,8 +154,8 @@ var draw_dungeon = function(){
 					}
 				}
 			}
-			document.getElementById("body").appendChild(input_canvas);
 			ctx.putImageData(imageData, 0, 0);
+
 		}	
 		dun_img.src = "img/input_dungeon.png"; 	
 	}
