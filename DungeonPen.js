@@ -178,9 +178,9 @@ var render_dungeon = function(){
 				data[i+2] =0;
 			}
 			if(getShadow(x,y,images.dungeon.data,wall)===1){
-				data[i] *= 0.75;
-				data[i+1] *= 0.75;
-				data[i+2] *= 0.75;
+				data[i] *= 0.6;
+				data[i+1] *= 0.6;
+				data[i+2] *= 0.6;
 			}
 		}
 	}
