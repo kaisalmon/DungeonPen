@@ -1,7 +1,7 @@
-var iw = 800;
-var ih = 800;
-var h = 20;
-var r = 8;
+var iw = 600;
+var ih = 600;
+var h = 16;
+var r = 10;
 
 var images = {
 	'wall':{'src':"wall.png", 'w':h, 'h':h},
@@ -104,6 +104,7 @@ function getDistToWall(x,y,read_data){
 	}else{
 		return result
 	}
+
 }
 
 function getDistToFloor(x,y,read_data){
@@ -163,6 +164,11 @@ var render_dungeon = function(){
 				data[i] *= edge;
 				data[i+1] *=edge;
 				data[i+2] *=edge;
+				if(getShadow(x,y,images.dungeon.data,wall)===1){
+					data[i] *= 0.6;
+					data[i+1] *= 0.6;
+					data[i+2] *= 0.6;
+				}
 				
 			}else if(images.dungeon.data[i]!=0){
 				var edge  = getDistToWall(x,y,images.dungeon.data);
@@ -172,16 +178,17 @@ var render_dungeon = function(){
 				data[i] = images.floor.data[fi]*mult;
 				data[i+1] = images.floor.data[fi]*mult;
 				data[i+2] = images.floor.data[fi]*mult;
+				if(getShadow(x,y,images.dungeon.data,wall)===1){
+					data[i] *= 0.6;
+					data[i+1] *= 0.6;
+					data[i+2] *= 0.6;
+				}
 			}else{
 				data[i] = 0;
 				data[i+1] =0;
 				data[i+2] =0;
 			}
-			if(getShadow(x,y,images.dungeon.data,wall)===1){
-				data[i] *= 0.6;
-				data[i+1] *= 0.6;
-				data[i+2] *= 0.6;
-			}
+		
 		}
 	}
 	document.getElementById("dungeon_canvas").getContext("2d").putImageData(imageData,0,0);
