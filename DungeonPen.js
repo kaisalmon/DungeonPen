@@ -1,7 +1,7 @@
-var iw = 600;
+var iw = 1000;
 var ih = 600;
-var h = 16;
-var r = 10;
+var h = 32;
+var r = 18;
 
 var images = {
 	'wall':{'src':"wall.png", 'w':h, 'h':h},
@@ -47,10 +47,10 @@ var all_images_promise = function(){
 
 function getIndex(x,y,hi,wi){
 	if(hi===undefined) hi = ih;
-	if(wi===undefined) wi = ih;
-	y = y % wi;
+	if(wi===undefined) wi = iw;
+	y = y % hi;
 	x = x % wi;
-	return (x+y*hi)*4;
+	return (x+y*wi)*4;
 }
 
 function getWallHeight(x,y, read_data){	
